@@ -1,0 +1,74 @@
+
+# Expectation Maximization Algorithm
+
+# Step 1: Import libraries
+import matplotlib.pyplot as plt
+
+from sklearn.datasets import make_blobs
+from sklearn.mixture import GaussianMixture
+from sklearn.model_selection import train_test_split
+
+# Step 2: Generate dataset
+X, y = make_blobs(
+    n_samples=300,
+    centers=3,
+    cluster_std=1.0,
+    random_state=42
+)
+
+# Step 3: Split dataset
+X_train, X_test = train_test_split(
+    X, test_size=0.2, random_state=42
+)
+
+# Step 4: Create Gaussian Mixture Model
+gmm = GaussianMixture(
+    n_components=3,
+    random_state=42,
+    max_iter=100
+)
+
+# Step 5: Train using EM algorithm
+gmm.fit(X_train)
+
+# Step 6: Predict clusters
+train_labels = gmm.predict(X_train)
+test_labels = gmm.predict(X_test)
+
+# Step 7: Display results
+print("EXPECTATION MAXIMIZATION ALGORITHM")
+print("Number of Components:", gmm.n_components)
+print("Converged:", gmm.converged_)
+print("Number of Iterations:", gmm.n_iter_)
+print("Log Likelihood:", gmm.score(X_test))
+
+print("\nPredicted Cluster Labels:")
+print(test_labels)
+
+# Step 8: Visualize clusters
+plt.figure(figsize=(8, 5))
+
+plt.scatter(
+    X_train[:, 0],
+    X_train[:, 1],
+    c=train_labels,
+    cmap="viridis"
+)
+
+plt.title("EM Algorithm - Gaussian Mixture Model")
+plt.xlabel("Feature 1")
+plt.ylabel("Feature 2")
+plt.show()
+
+# Step 9: Classify a new sample
+new_sample = [[0, 0]]
+
+prediction = gmm.predict(new_sample)
+
+print("\nNew Sample:", new_sample)
+print("Assigned Cluster:", prediction[0])
+
+# Step 10: Display cluster probabilities
+probabilities = gmm.predict_proba(new_sample)
+
+print("Cluster Probabilities:", probabilities)
